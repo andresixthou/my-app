@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    work: Work;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    work: WorkSelect<false> | WorkSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -161,6 +163,40 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "work".
+ */
+export interface Work {
+  id: number;
+  title: string;
+  postedAt: string;
+  destination: 'page' | 'link';
+  type?: ('music' | 'film' | 'photography' | 'writing' | 'other') | null;
+  /**
+   * Optional text shown on the SIXTHOU post page.
+   */
+  statement?: string | null;
+  /**
+   * Main image for a SIXTHOU page.
+   */
+  cover?: (number | null) | Media;
+  /**
+   * Additional images for a SIXTHOU page.
+   */
+  gallery?:
+    | {
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * For External link posts. Example: a YouTube or Vimeo URL.
+   */
+  externalUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -190,6 +226,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'work';
+        value: number | Work;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -270,6 +310,27 @@ export interface MediaSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "work_select".
+ */
+export interface WorkSelect<T extends boolean = true> {
+  title?: T;
+  postedAt?: T;
+  destination?: T;
+  type?: T;
+  statement?: T;
+  cover?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  externalUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
